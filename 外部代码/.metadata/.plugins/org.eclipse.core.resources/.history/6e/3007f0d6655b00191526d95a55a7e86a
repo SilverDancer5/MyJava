@@ -1,0 +1,59 @@
+
+public class Controller {
+	
+	
+	static StringBuffer bestPath = new StringBuffer();
+	
+	public static void main(String[] args) {
+		
+		Puzzle target = new Puzzle();
+		Puzzle start = new Puzzle();
+			
+		target.setNum(Model.targetState);
+		Model.creatRandomState();
+		start.setNum(Model.startState);
+		
+		System.out.println("----------生成随机状态----------");	
+		Puzzle best = new Puzzle();
+		if(start.isSolvable(target)) {
+			System.out.println("----------开始复原----------");
+			best = DoPuzzle.doRestore(start, target);
+			
+		}else {
+			System.out.println("----------此状态无解----------");
+			int a =0, b = 1;
+			int temp = Model.startState[a];
+			Model.startState[a] = Model.startState[b];
+			Model.startState[b] = temp;
+			System.out.println("----------正在转换----------");
+			
+			//MARK 待解耦
+			for(int i=0; i<9; i++) {
+	    		if(i%3 == 2)
+	    			System.out.println(Model.startState[i]);
+	    		else
+	    			System.out.print(Model.startState[i] + " ");
+	    	}
+			System.out.println("----------已生成有解状态----------");
+			System.out.println("----------开始复原----------");
+			best.setNum(Model.startState);
+			best = DoPuzzle.doRestore(start,target);
+		}
+
+		//存储最优路径
+		int pathLength=-1;
+		while(best != null) {
+			DoPuzzle.result[++pathLength] = best.getNum();
+			best = best.getParent();
+		}
+		
+		//打印拼图
+		DoPuzzle.printPuzzleRoute(DoPuzzle.result, pathLength);
+		
+		//打印路径
+		bestPath = DoPuzzle.getbestPath(pathLength);
+		System.out.println(bestPath);		
+		System.out.println("结束");
+	}
+
+}

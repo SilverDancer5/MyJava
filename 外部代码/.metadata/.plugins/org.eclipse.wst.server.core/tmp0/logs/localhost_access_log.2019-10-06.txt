@@ -1,0 +1,8 @@
+127.0.0.1 - - [06/Oct/2019:22:16:19 +0800] "GET / HTTP/1.1" 404 1074
+0:0:0:0:0:0:0:1 - - [06/Oct/2019:22:16:20 +0800] "GET /bookstore_me/WEB-INF/classes/cn/itcast/bookstore/book/dao/BookDao.java HTTP/1.1" 404 1047
+0:0:0:0:0:0:0:1 - - [06/Oct/2019:22:16:28 +0800] "GET /bookstore_me/ HTTP/1.1" 200 1653
+0:0:0:0:0:0:0:1 - - [06/Oct/2019:22:16:28 +0800] "GET /bookstore_me/jsps/body.jsp;jsessionid=75176DD120A9A604E0BE9F4F79C84984 HTTP/1.1" 200 662
+0:0:0:0:0:0:0:1 - - [06/Oct/2019:22:16:28 +0800] "GET /bookstore_me/jsps/top.jsp;jsessionid=75176DD120A9A604E0BE9F4F79C84984 HTTP/1.1" 200 1364
+0:0:0:0:0:0:0:1 - - [06/Oct/2019:22:16:31 +0800] "GET /bookstore_me/jsps/cart/list.jsp HTTP/1.1" 200 1906
+0:0:0:0:0:0:0:1 - - [06/Oct/2019:22:16:31 +0800] "GET /bookstore_me/jsps/cart/black HTTP/1.1" 404 1114
+0:0:0:0:0:0:0:1 - - [06/Oct/2019:22:16:31 +0800] "GET /bookstore_me/jsps/cart/black HTTP/1.1" 404 1114

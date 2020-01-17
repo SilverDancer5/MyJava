@@ -1,0 +1,20 @@
+package myPuzzle_TEST;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+
+class ppr_TESTTest {
+
+	@Test
+	void test() {
+		
+		int[] arr= {0, 1, 2, 3};
+		int len = arr.length;
+		
+		ppr_TEST p = new ppr_TEST();
+		assertEquals(0, p.getZeroPosition(arr, len));
+		
+	}
+
+}

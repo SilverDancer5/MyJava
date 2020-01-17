@@ -1,0 +1,48 @@
+package EagerSingleton;
+
+public class MySingleton2 {
+	 
+	//设立静态变量，直接创建实例
+	private static EagerSingleton2 mySingleton = new EagerSingleton2();
+ 
+	private MySingleton2(){
+		//私有化构造函数
+		System.out.println("-->饿汉式单例模式开始调用构造函数");
+	}
+	
+	//开放一个公有方法，判断是否已经存在实例，有返回，没有新建一个在返回
+	public static EagerSingleton2 getInstance(){
+		System.out.println("-->饿汉式单例模式开始调用公有方法返回实例");
+		return mySingleton;
+	}
+/**
+	 * 饿汉式单例模式
+	 * MySingleton2
+	 */
+	public static void myprint2(){
+		System.out.println("-----------------饿汉式单例模式----------------");
+		System.out.println("第一次取得实例（饿汉式）");
+		EagerSingleton2 s1 = EagerSingleton2.getInstance();
+		System.out.println("第二次取得实例（饿汉式）");
+		EagerSingleton2 s2 = EagerSingleton2.getInstance();
+		if(s1==s2){
+			System.out.println(">>>>>s1,s2为同一实例（饿汉式）<<<<<");
+		}
+		System.out.println();
+	}
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		//懒汉式
+		//myprint();
+		//饿汉式
+		myprint2();
+		//懒汉式改进
+		//myprint2a();
+		//登记式
+		//myprint3();
+ 
+	}
+}

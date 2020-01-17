@@ -1,0 +1,319 @@
+package addBook;
+
+import java.awt.EventQueue;
+import java.awt.List;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.border.TitledBorder;
+import javax.swing.JTable;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.beans.Statement;
+import java.awt.event.ActionEvent;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+public class addBook {
+
+	private JFrame frame;
+	private JTable list_table;
+	private JTextField name_textField;
+	private JTextField tel_textField;
+	private JTextField address_textField;
+	
+	
+	private String nameToDB;
+	private String telToDB;
+	private String addressToDB; 
+	private static ArrayList<DBData> dataList = new ArrayList<>();
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		
+		/*
+		 * 连接数据库
+		 */
+		try {
+			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+			String url = "jdbc:sqlserver://localhost:1433;databaseName=AddressBook";
+			Connection con = DriverManager.getConnection(url,"sa","123456");
+			System.out.println("数据库连接成功");
+			
+			
+			java.sql.Statement stmt = con.createStatement();
+	            String sql;
+	            sql = "SELECT Fid, Fname, Fphone, Faddress FROM bookTable";
+	            ResultSet rs = stmt.executeQuery(sql);
+	            
+	            int currow = 0;
+	            // 展开结果集数据库
+	            while(rs.next()){
+	                // 通过字段检索
+	                int id  = rs.getInt("Fid");
+	                String name = rs.getString("Fname");
+	                String phone = rs.getString("Fphone");
+	                String address = rs.getString("Faddress");
+	                
+	                DBData dbData = new DBData();
+	                dbData.setId(id);
+	                dbData.setName(name);
+	                dbData.setTel(phone);
+	                dbData.setAddress(address);
+	                
+	                dataList.add(dbData);
+	                
+	                /*
+	                // 输出数据
+	                System.out.print("ID: " + id);
+	                System.out.print(", 名字: " + name);
+	                System.out.print(", 电话: " + address);
+	                System.out.print("\n");
+	                */
+	            }
+	            
+	            
+	            // 完成后关闭
+	        rs.close();
+	        stmt.close();
+			con.close();
+		}
+		catch(Exception e) {
+			System.out.println("数据库连接失败\n" + e.toString());
+		}
+		
+		/*
+		 * 界面
+		 */
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					//addBook a=new addBook();
+					addBook window = new addBook();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public addBook() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frame = new JFrame();
+		frame.setTitle("\u901A\u8BAF\u5F55");
+		frame.setBounds(100, 100, 799, 535);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		
+		JPanel man_panel = new JPanel(new BorderLayout());
+		man_panel.setBorder(new TitledBorder(null, "\u8054\u7CFB\u4EBA\u5217\u8868", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		man_panel.setBounds(14, 13, 753, 198);
+		frame.getContentPane().add(man_panel);
+		
+		
+		Object[] columnNames = {"编号", "姓名", "电话", "地址"};
+
+        // 表格所有行数据
+		Object[][] rowDataArr = {};
+		
+		
+		Iterator<DBData> it = dataList.iterator();
+		int i = 0;
+		while(it.hasNext()) {
+			DBData rowData1 = new DBData();
+			rowData1 = it.next();
+			
+			rowDataArr[i][0] = rowData1.getId();
+			rowDataArr[i][1] = rowData1.getName();
+			rowDataArr[i][2] = rowData1.getTel();
+			rowDataArr[i][3] = rowData1.getAddress();
+			i++;
+			
+			System.out.println(rowData1.getId());
+			System.out.println(rowData1.getName());
+			System.out.println(rowData1.getTel());
+			System.out.println(rowData1.getAddress() + "\n" + "-------" + "\n");
+			
+		}
+		
+        man_panel.setLayout(new BorderLayout());
+        list_table = new JTable(rowDataArr, columnNames) {
+        	public boolean isCellEditable(int row, int column)
+            {
+                return false;
+            }
+        };
+        man_panel.add(list_table.getTableHeader(), BorderLayout.NORTH);
+        // 把 表格内容 添加到容器中心
+        man_panel.add(list_table, BorderLayout.CENTER);
+        list_table.setBounds(72, 29, 404, 80);
+        list_table.setFillsViewportHeight(true);
+        list_table.getTableHeader().setResizingAllowed(false);               // 设置不允许手动改变列宽
+        list_table.getTableHeader().setReorderingAllowed(false); 
+        // 设置滚动面板视口大小（超过该大小的行数据，需要拖动滚动条才能看到）
+        list_table.setPreferredScrollableViewportSize(new Dimension(400, 300));
+        // 把 表格 放到 滚动面板 中（表头将自动添加到滚动面板顶部）
+        JScrollPane scrollPane = new JScrollPane(list_table);
+
+        man_panel.add(scrollPane);
+
+		
+		JPanel message_panel = new JPanel();
+		message_panel.setBorder(new TitledBorder(null, "\u4FE1\u606F\u7A97\u53E3", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		message_panel.setBounds(24, 224, 365, 251);
+		frame.getContentPane().add(message_panel);
+		message_panel.setLayout(null);
+		
+		JLabel name_label = new JLabel("\u59D3\u540D");
+		name_label.setBounds(43, 41, 41, 18);
+		message_panel.add(name_label);
+		
+		
+		JLabel telLabel = new JLabel("\u7535\u8BDD");
+		telLabel.setBounds(43, 94, 41, 18);
+		message_panel.add(telLabel);
+		
+		JLabel address_label = new JLabel("\u5730\u5740");
+		address_label.setBounds(43, 142, 41, 18);
+		message_panel.add(address_label);
+		
+		name_textField = new JTextField();
+		name_textField.setBounds(144, 38, 101, 24);
+		message_panel.add(name_textField);
+		name_textField.setColumns(10);
+		
+		
+		tel_textField = new JTextField();
+		tel_textField.setBounds(144, 91, 101, 24);
+		message_panel.add(tel_textField);
+		tel_textField.setColumns(10);
+		
+		address_textField = new JTextField();
+		address_textField.setBounds(144, 139, 172, 99);
+		message_panel.add(address_textField);
+		address_textField.setColumns(10);
+		
+		JButton name_Button = new JButton("\u786E\u5B9A");
+		name_Button.setBounds(275, 37, 76, 27);
+		message_panel.add(name_Button);
+		name_Button.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String newName = name_textField.getText();
+				if(newName.isEmpty()) {
+					JOptionPane.showMessageDialog(message_panel, "姓名不能为空", "标题",JOptionPane.WARNING_MESSAGE);
+				} else {
+					nameToDB = newName;
+					System.out.println("获得新建联系人姓名" + nameToDB);
+				}
+				
+			}
+		});
+		
+		JButton tel_Button = new JButton("\u786E\u5B9A");
+		tel_Button.setBounds(275, 85, 76, 27);
+		message_panel.add(tel_Button);
+		tel_Button.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String newTel = tel_textField.getText();
+				if(newTel.isEmpty()) {
+					JOptionPane.showMessageDialog(message_panel, "电话不能为空", "标题",JOptionPane.WARNING_MESSAGE);
+				} else {
+					telToDB = newTel;
+					System.out.println("获得新建联系人姓名" + telToDB);
+				}
+				
+				
+			}
+		});
+		
+		JPanel control_panel = new JPanel();
+		control_panel.setBorder(new TitledBorder(null, "\u64CD\u4F5C\u7A97\u53E3", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		control_panel.setBounds(393, 224, 374, 251);
+		frame.getContentPane().add(control_panel);
+		control_panel.setLayout(null);
+		
+		/*
+		 * 添加信息
+		 */
+		JButton addMes_Btn = new JButton("\u6DFB\u52A0\u8054\u7CFB\u4EBA\u4FE1\u606F");
+		addMes_Btn.setBounds(14, 25, 346, 27);
+		control_panel.add(addMes_Btn);
+		addMes_Btn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(nameToDB != null && telToDB != null) {
+					System.out.println("向数据库添加信息");
+					DBData data = new DBData();
+					data.setName(nameToDB);
+					data.setTel(telToDB);
+					data.setAddress(addressToDB);
+					dataList.add(data);
+					printList();
+				} else {
+					JOptionPane.showMessageDialog(control_panel, "数据为空", "标题",JOptionPane.WARNING_MESSAGE);
+				}
+			}
+		});
+		
+		/*
+		 * 修改信息
+		 */
+		JButton changemes_btn = new JButton("\u4FEE\u6539\u9009\u4E2D\u8054\u7CFB\u4EBA\u4FE1\u606F");
+		changemes_btn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				int curRow = list_table.getSelectedRow();
+				
+			}
+		});
+		changemes_btn.setBounds(14, 78, 346, 27);
+		control_panel.add(changemes_btn);
+		
+		JButton delete_btn = new JButton("\u5220\u9664\u9009\u4E2D\u8054\u7CFB\u4EBA\u4FE1\u606F");
+		delete_btn.setBounds(14, 129, 346, 27);
+		control_panel.add(delete_btn);
+		
+		JButton about_btn = new JButton("\u5173\u4E8E\u8F6F\u4EF6");
+		about_btn.setBounds(14, 185, 346, 27);
+		control_panel.add(about_btn);
+	}
+	
+	
+	public void printList() {
+		Iterator<DBData> it = dataList.iterator();
+		DBData rowData1 = new DBData();
+		while(it.hasNext()) {
+			rowData1 = it.next();
+			System.out.println(rowData1.getId());
+			System.out.println(rowData1.getName());
+			System.out.println(rowData1.getTel());
+			System.out.println(rowData1.getAddress() + "\n" + "-------" + "\n");
+		}
+	}
+
+}

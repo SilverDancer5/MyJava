@@ -1,0 +1,10 @@
+
+
+public class Singleton {
+	private Singleton(){
+	}
+	private static final Singleton Instance=new Singleton();
+	public Singleton getInstance(){ 
+		return Instance;
+	}
+}

@@ -1,0 +1,5 @@
+package EagerSingleton;
+
+public class MySingleton2 {
+
+}

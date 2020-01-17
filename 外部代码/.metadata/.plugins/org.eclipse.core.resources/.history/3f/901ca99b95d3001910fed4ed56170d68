@@ -1,0 +1,14 @@
+package myPuzzle_TEST;
+
+public class ppr_TEST {
+	 int getZeroPosition(int[] resultNum, int last) {
+		int position = -1;
+			for(int j=0; j<9; j++) {
+				if(resultNum[j] == 0) {
+					position = j;
+					break;
+				}
+			}
+		return position;
+	}
+}

@@ -1,0 +1,79 @@
+
+public class Controller {
+	
+	
+	static int[][] result = new int[400000][9];
+	static StringBuffer bestPath = new StringBuffer();
+	
+	public static void main(String[] args) {
+		
+		Puzzle target = new Puzzle();
+		Puzzle start = new Puzzle();
+			
+		target.setNum(targetState);
+		start.setNum(startState);
+		
+		System.out.println("----------生成随机状态----------");	
+		Puzzle best = new Puzzle();
+		if(start.isSolvable(target)) {
+			System.out.println("----------开始复原----------");
+			best = DoPuzzle.doRestore(start, target);
+			
+		}else {
+			System.out.println("----------此状态无解----------");
+//			changeTo(startState);
+			int a =0, b = 1;
+			int temp = startState[a];
+			startState[a] = startState[b];
+			startState[b] = temp;
+			System.out.println("----------正在转换----------");
+			
+			//MARK 待解耦
+			for(int i=0; i<9; i++) {
+	    		if(i%3 == 2)
+	    			System.out.println(startState[i]);
+	    		else
+	    			System.out.print(startState[i] + " ");
+	    	}
+			System.out.println("----------已生成有解状态----------");
+			System.out.println("----------开始复原----------");
+			best.setNum(startState);
+			best = doRestore(start,target);
+		}
+
+		//存储最优路径
+		int last=-1;
+		while(best != null) {
+			result[++last] = best.getNum();
+			best = best.getParent();
+		}
+		System.out.println(last);
+		printPuzzleRoute(result, last);
+		
+
+		for(int i=last-1; i>=0; i--) {
+			int j = i+1;
+			int beforePos = getZeroPosition(result[j], last);
+			int afterPos = getZeroPosition(result[i], last);
+			switch((afterPos - beforePos)) {
+			case 1:
+				bestPath.append("R");
+				break;
+			case -1:
+				bestPath.append("L");
+				break;
+			case 3:
+				bestPath.append("D");
+				break;
+			case -3:
+				bestPath.append("U");
+				break;
+			}
+		}
+		
+		new SimpleFrame(3, 3);
+		System.out.println(bestPath);		
+		System.out.println("结束");
+	}
+
+}

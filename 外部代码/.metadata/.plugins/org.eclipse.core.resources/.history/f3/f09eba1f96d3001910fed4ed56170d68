@@ -1,0 +1,29 @@
+package myPuzzle_TEST;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+
+class ppr_TESTTest {
+
+	@Test
+	void test() {
+		
+		int[4][] arr= {{0, 1, 2, 3},
+					   {1, 0, 2, 3},
+					   {1, 2, 0, 3},
+					   {1, 2, 3, 0}};
+		
+		ppr_TEST p = new ppr_TEST();
+		
+		for(int i=0; i < arr[i].length ; i++) {
+			int len = arr[i].length;
+			assertEquals(i, p.getZeroPosition(arr[i], len));
+		}
+		
+		
+		
+		
+	}
+
+}

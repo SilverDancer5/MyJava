@@ -1,0 +1,17 @@
+package myPuzzle_TEST;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+
+class ppr_TESTTest {
+
+	@Test
+	void test() {
+		
+		
+		getZeroPosition g = new getZeroPosition();
+		
+	}
+
+}
